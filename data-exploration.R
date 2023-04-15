@@ -1,4 +1,5 @@
 ccApproval = read.csv("credit_card_approval.csv")
+ccApproval1 = na.omit(ccApproval)
 
 save(ccApproval, "ccApproval.RDS")
 
@@ -12,6 +13,7 @@ levels(eduLevels)
 
 academicSal = ccApproval[ccApproval$NAME_EDUCATION_TYPE=="Academic degree",]
 riskUsers = ccApproval[ccApproval$TARGET==1,]
+nrow(riskUsers)
 (nrow(riskUsers)/nrow(ccApproval))*100
 #0.03 percent users are risk users. need undersampling/oversampling?
 

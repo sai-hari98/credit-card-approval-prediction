@@ -29,4 +29,7 @@ compare the accuracy. (kind of ensemble method). include bagging boosting if nee
 
 -> since there are only 0.03 percent, we need to do undersampling/oversampling to the actual data.
 
+
+
+
 -> then we'll think of principal component analysis

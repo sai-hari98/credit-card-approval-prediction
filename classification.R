@@ -1,29 +1,48 @@
+#preprocessing
+source("preprocessing.R")
+
+#logistic regression
 set.seed(123)
 library(rpart)
 train = sample(1:nrow(ccApproval),(2/3)*nrow(ccApproval))
-ccApproval.train = ccApproval[train,]
-ccApproval.test = ccApproval[-train,]
 
-decisionTree <- rpart(TARGET ~ ., ccApproval.train, method="class",
-                        control = rpart.control(xval=0, minsplit = 1000))
-decisionTree1 <- rpart(TARGET ~ ., ccApproval.train, method="class",
-                      control = rpart.control(xval=10, minsplit=2, cp=0))
-decisionTree
-library(rpart.plot)
-rpart.plot(decisionTree, type = 1, extra = 1, main="Classification Tree for Risk Users") 
-rpart.plot(decisionTree1, type = 1, extra = 1, main="Classification Tree for Risk Users") 
+#removing status since it is has a direct relationship with the class to be predicted
+featuresToRemove = c("STATUS")
+ccApproval.train = ccApproval[train,!names(ccApproval) %in% featuresToRemove]
+ccApproval.test = ccApproval[-train,!names(ccApproval) %in% featuresToRemove]
 
-prediction <- predict(decisionTree, ccApproval.test, type="class")
-prediction1 <- predict(decisionTree1, ccApproval.test, type="class")
+nrow(ccApproval.train[ccApproval.test$TARGET=="1",])/nrow(ccApproval.train)
 
-actual <- ccApproval.test$TARGET
+logit.reg <- glm(TARGET ~ ., data = ccApproval.train, family = "binomial")
 
-cm <- table(prediction1,actual)
+logit.predict <- predict(logit.reg, ccApproval.test, type = "response")
 
-cm
+actual <- as.character(ccApproval.test$TARGET)
 
-accuracy <- (cm[1,1]+cm[2,2])/length(actual)
-accuracy
+#doing ROC to find the Youden point
+library(ROCit)
+roc_logit <- rocit(score = logit.predict, class = actual)
 
-#decision tree is getting a 100% accuracy based on the status attribute
+result_logit = data.frame(cbind(AUC=roc_logit$AUC, Cutoff=roc_logit$Cutoff, 
+                                TPR=roc_logit$TPR, FPR=roc_logit$FPR))
+head(result_logit)
+
+result_logit$diff = result_logit$TPR - result_logit$FPR
+result_logit[which.max(result_logit[, c("diff")]), ]
+
+plot(roc_logit, YIndex = T, col = c(2,4)) # Changing color
+
+cutoff <- result_logit[which.max(result_logit[, c("diff")]), 2]
+predict <- ifelse(logit.predict>cutoff, "1","0")
+
+#57% accuracy
+library(caret)
+cm <- table(predict, actual)
+confusionMatrix(cm)
+
+#notes for improvement
+#svm
+#precision recall curve
+#test set 
+#stratified sampling
 
