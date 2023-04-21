@@ -33,3 +33,12 @@ compare the accuracy. (kind of ensemble method). include bagging boosting if nee
 
 
 -> then we'll think of principal component analysis
+
+537667
+1962
+537667-1962
+
+1962*x = 100000
+x=51
+
+x1/537667 = 51
