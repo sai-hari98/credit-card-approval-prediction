@@ -1,23 +1,23 @@
 #preprocessing
 source("preprocessing.R")
-logit <- function(ccApproval){
+logit <- function(data){
   #logistic regression
   set.seed(123)
   library(rpart)
-  train = sample(1:nrow(ccApproval),(2/3)*nrow(ccApproval))
+  train = sample(1:nrow(data),(2/3)*nrow(data))
   
   #removing status since it is has a direct relationship with the class to be predicted
   featuresToRemove = c("STATUS")
-  ccApproval.train = ccApproval[train,!names(ccApproval) %in% featuresToRemove]
-  ccApproval.test = ccApproval[-train,!names(ccApproval) %in% featuresToRemove]
+  data.train = data[train,!names(data) %in% featuresToRemove]
+  data.test = data[-train,!names(data) %in% featuresToRemove]
   
-  #nrow(ccApproval.train[ccApproval.test$TARGET=="1",])/nrow(ccApproval.train)
+  #nrow(data.train[data.test$TARGET=="1",])/nrow(data.train)
   
-  logit.reg <- glm(TARGET ~ ., data = ccApproval.train, family = "binomial")
+  logit.reg <- glm(TARGET ~ ., data = data.train, family = "binomial")
   
-  logit.predict <- predict(logit.reg, ccApproval.test, type = "response")
+  logit.predict <- predict(logit.reg, data.test, type = "response")
   
-  actual <- as.character(ccApproval.test$TARGET)
+  actual <- as.character(data.test$TARGET)
   
   #doing ROC to find the Youden point
   library(ROCit)
