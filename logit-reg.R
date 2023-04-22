@@ -13,7 +13,9 @@ logit <- function(data){
   
   #nrow(data.train[data.test$TARGET=="1",])/nrow(data.train)
   
-  logit.reg <- glm(TARGET ~ ., data = data.train, family = "binomial")
+  formula <- as.formula(TARGET ~ CODE_GENDER+FLAG_OWN_CAR+FLAG_OWN_REALTY+CNT_CHILDREN+AMT_INCOME_TOTAL+NAME_EDUCATION_TYPE
+                        +NAME_FAMILY_STATUS+NAME_HOUSING_TYPE+DAYS_EMPLOYED+JOB+BEGIN_MONTHS+AGE)
+  logit.reg <- glm(formula , data = data.train, family = "binomial")
   
   logit.predict <- predict(logit.reg, data.test, type = "response")
   
@@ -38,7 +40,10 @@ logit <- function(data){
   #57% accuracy
   library(caret)
   cm <- table(predict, actual)
+  fnr <- cm[1,2]/(cm[1,2]+cm[2,2])
   confusionMatrix(cm)
+  #paste("FNR is",fnr)
+  #paste(cm)
 }
 
 logit(ccApproval)

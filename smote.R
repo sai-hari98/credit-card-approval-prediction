@@ -32,4 +32,16 @@ for(i in 1:nrow(x)){
 
 logit(smoteLogitData)
 
+rm(list=ls())
+cat('\014')
 #smote and glm has better accuracy but the FNR is high is smote. almost double the rate as without using smote.
+
+
+?ROSE
+
+formula <- as.formula(TARGET ~ CODE_GENDER+FLAG_OWN_CAR+FLAG_OWN_REALTY+CNT_CHILDREN+AMT_INCOME_TOTAL+NAME_EDUCATION_TYPE
+                      +NAME_FAMILY_STATUS+NAME_HOUSING_TYPE+DAYS_EMPLOYED+JOB+BEGIN_MONTHS+AGE)
+rose = ROSE(formula, data=ccApproval, N=250000, p=0.7, seed=123)
+roseData = rose$data
+
+logit(roseData)

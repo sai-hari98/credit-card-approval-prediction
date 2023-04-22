@@ -23,3 +23,12 @@ ccApproval$STATUS = as.factor(ccApproval$STATUS)
 ccApproval$BEGIN_MONTHS = abs(ccApproval$BEGIN_MONTHS)
 ccApproval$CNT_CHILDREN = as.factor(ccApproval$CNT_CHILDREN)
 ccApproval$NAME_FAMILY_STATUS = as.factor(ccApproval$NAME_FAMILY_STATUS)
+
+ccApproval = ccApproval[,!names(ccApproval) %in% c("DAYS_BIRTH")]
+
+library(Hmisc)
+
+
+
+#create matrix of correlation coefficients and p-values
+rcorr(as.matrix(ccApproval))
