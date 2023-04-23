@@ -23,6 +23,24 @@ min(academicSal$AMT_INCOME_TOTAL)
 max(academicSal$AMT_INCOME_TOTAL)
 max(academicSal$AMT_INCOME_TOTAL)
 
+g <- ggplot(ccApproval, aes(ccApproval$BEGIN_MONTHS, ccApproval$AMT_INCOME_TOTAL))
+g + geom_point()  
+g + geom_point(aes(color=ccApproval$CODE_GENDER))   # color the dots by gender
+
+length(unique(ccApproval1$NAME_FAMILY_STATUS))
+unique(ccApproval1$STATUS)
+
+# Load ggplot2
+library(ggplot2)
+
+# Create side-by-side barchart of gender pertaining to marriage status by alignment
+ggplot(ccApproval1, aes(x = ccApproval1$NAME_FAMILY_STATUS, fill = ccApproval1$CODE_GENDER)) + 
+  geom_bar(position = "dodge")
+
+# Create side-by-side barchart of gender pertaining to target status by alignment
+ggplot(ccApproval1, aes(x = ccApproval1$TARGET, fill = ccApproval1$CODE_GENDER)) + 
+  geom_bar(position = "dodge")
+
 meanDaysEmployed = mean(ccApproval$DAYS_EMPLOYED)
 sdDaysEmployed = sd(ccApproval$DAYS_EMPLOYED)
 
