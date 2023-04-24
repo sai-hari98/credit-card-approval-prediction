@@ -29,8 +29,15 @@ for(i in 1:nrow(x)){
     smoteLogitData[,colName] = as.factor(smoteLogitData[,colName]) 
   }
 }
-
+boosting(smoteLogitData)
 logit(smoteLogitData)
+
+
+fit = rpart(formula, 
+            data = churn.train,
+            method = "class",
+            control = rpart.control(xval=0, minsplit = 1000),
+            parms = list(split="gini"))
 
 rm(list=ls())
 cat('\014')
